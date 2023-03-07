@@ -10,11 +10,12 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Meta;
 import org.hl7.fhir.r4.model.Patient;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class Test {
+public class ValidationTest {
 
     private FhirValidator preconfiguredValidator;
 
@@ -45,10 +46,10 @@ public class Test {
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(ctx);
 
         IParser parser = ctx.newJsonParser();
-            IBaseResource sd1 = parser.parseResource(getClass().getClassLoader().getResourceAsStream("StructureDefinition-PatientForProfileVersionTesting_0.1.0.json"));
-            IBaseResource sd2 = parser.parseResource(getClass().getClassLoader().getResourceAsStream("StructureDefinition-PatientForProfileVersionTesting_0.2.0.json"));
-            prePopulatedSupport.addStructureDefinition(sd1);
-            prePopulatedSupport.addStructureDefinition(sd2);
+        IBaseResource sd1 = parser.parseResource(getClass().getClassLoader().getResourceAsStream("StructureDefinition-PatientForProfileVersionTesting_0.1.0.json"));
+        IBaseResource sd2 = parser.parseResource(getClass().getClassLoader().getResourceAsStream("StructureDefinition-PatientForProfileVersionTesting_0.2.0.json"));
+        prePopulatedSupport.addStructureDefinition(sd1);
+        prePopulatedSupport.addStructureDefinition(sd2);
 
         // Add the custom definitions to the chain
         supportChain.addValidationSupport(prePopulatedSupport);
@@ -62,7 +63,7 @@ public class Test {
         preconfiguredValidator = ctx.newValidator().registerValidatorModule(validatorModule);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithProfileAndVersion020AgainstAvailableProfile() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0"));
@@ -75,7 +76,7 @@ public class Test {
         assertEquals("Patient.gender: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0)", result.getMessages().get(1).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithProfileAndVersion010AgainstAvailableProfile() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.1.0"));
@@ -87,7 +88,7 @@ public class Test {
         assertEquals("Patient.gender: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.1.0)", result.getMessages().get(0).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithProfileAndVersionAgainstUnavailableProfile() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.3.0"));
@@ -100,7 +101,7 @@ public class Test {
     }
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithProfileAndNoVersionAgainstMultipleAvailableProfiles() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting"));
@@ -114,7 +115,7 @@ public class Test {
         assertEquals("Patient.gender: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0)", result.getMessages().get(1).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithoutProfileAndVersionAgainstAvailableProfileExplicitly() {
         Patient input = new Patient();
         ValidationResult result = preconfiguredValidator.validateWithResult(input, new ValidationOptions().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0"));
@@ -126,7 +127,7 @@ public class Test {
     }
 
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithoutProfileAndVersion010AgainstAvailableProfileExplicitly() {
         Patient input = new Patient();
         ValidationResult result = preconfiguredValidator.validateWithResult(input, new ValidationOptions().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.1.0"));
@@ -136,7 +137,7 @@ public class Test {
         assertEquals("Patient.gender: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.1.0)", result.getMessages().get(0).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithoutProfileAndVersionAgainstUnavailableProfileExplicitly() {
         Patient input = new Patient();
 
@@ -147,7 +148,7 @@ public class Test {
         assertEquals("Profile reference 'http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.3.0' has not been checked because it is unknown", result.getMessages().get(0).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithProfileAndVersionAgainstUnavailableProfileExplicitly() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.3.0"));
@@ -158,7 +159,7 @@ public class Test {
         assertEquals("Profile reference 'http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.3.0' has not been checked because it is unknown", result.getMessages().get(0).getMessage());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     public void testValidateResourceWithoutProfileAndNoVersionAgainstMultipleAvailableProfilesExplicitly() {
         Patient input = new Patient();
         input.setMeta(new Meta().addProfile("http://example.org/StructureDefinition/PatientForProfileVersionTesting"));
