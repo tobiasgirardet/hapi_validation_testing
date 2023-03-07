@@ -171,12 +171,4 @@ public class Test {
         assertEquals("Patient.active: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0)", result.getMessages().get(0).getMessage());
         assertEquals("Patient.gender: minimum required = 1, but only found 0 (from http://example.org/StructureDefinition/PatientForProfileVersionTesting|0.2.0)", result.getMessages().get(1).getMessage());
     }
-
-//    // Do we have any errors or fatal errors?
-//        System.out.println(result.isSuccessful());
-//
-//    // Show the issues
-//        for (SingleValidationMessage next : result.getMessages()) {
-//        System.out.println(" Next issue " + next.getSeverity() + " - " + next.getLocationString() + " - " + next.getMessage());
-//    }
 }
